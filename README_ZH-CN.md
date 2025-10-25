@@ -1,4 +1,4 @@
-# AI 画板应用
+# 画板应用
 
 这是一个功能丰富的在线画板应用，支持手动绘画和API调用绘画，以及导出图片功能。
 
@@ -50,35 +50,35 @@
 输入命令后点击"执行命令"按钮或按Enter键执行。
 
 #### JavaScript API
-页面加载后，全局对象`window.AIDrawingAPI`可用于通过JavaScript控制画板：
+页面加载后，全局对象`window.DrawingAPI`可用于通过JavaScript控制画板：
 
 ```javascript
 // 绘制直线
- AIDrawingAPI.drawLine(10, 10, 100, 100, "#ff0000", 5);
+ DrawingAPI.drawLine(10, 10, 100, 100, "#ff0000", 5);
 
 // 绘制圆形
- AIDrawingAPI.drawCircle(150, 150, 50, "#00ff00", 3);
+ DrawingAPI.drawCircle(150, 150, 50, "#00ff00", 3);
 
 // 绘制矩形
- AIDrawingAPI.drawRectangle(200, 200, 100, 80, "#0000ff", 2);
+ DrawingAPI.drawRectangle(200, 200, 100, 80, "#0000ff", 2);
 
 // 绘制文本
- AIDrawingAPI.drawText(50, 50, "Hello World", "#ff00ff", 24);
+ DrawingAPI.drawText(50, 50, "Hello World", "#ff00ff", 24);
 
 // 导出画布
- const dataUrl = AIDrawingAPI.export();
+ const dataUrl = DrawingAPI.export();
 
 // 清空画布
- AIDrawingAPI.clear();
+ DrawingAPI.clear();
 
 // 设置画笔颜色
- AIDrawingAPI.setColor("#ff9900");
+ DrawingAPI.setColor("#ff9900");
 
 // 设置画笔粗细
- AIDrawingAPI.setLineWidth(8);
+ DrawingAPI.setLineWidth(8);
 
 // 执行命令字符串
- const result = AIDrawingAPI.executeCommand("draw(circle, 300, 300, 40)");
+ const result = DrawingAPI.executeCommand("draw(circle, 300, 300, 40)");
 ```
 
 ## 安装和运行
@@ -118,10 +118,10 @@ pip install pillow requests
 ### 基本使用
 
 ```python
-from draw_api import AIDrawingAPI
+from draw_api import DrawingAPI
 
 # 创建本地模式API实例
-api = AIDrawingAPI(width=800, height=600)
+api = DrawingAPI(width=800, height=600)
 
 # 绘制图形
 api.draw_line(10, 10, 100, 100, color='#ff0000', width=5)
@@ -140,7 +140,7 @@ api.show()
 
 ```python
 # 连接到Web版画板（需要Web版正在运行）
-api = AIDrawingAPI(mode='remote', url='http://localhost:8000')
+api = DrawingAPI(mode='remote', url='http://localhost:8000')
 
 # 绘制图形到远程画板
 api.draw_circle(300, 300, 40)

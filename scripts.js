@@ -76,7 +76,7 @@ function handleClearCanvas() {
 function handleExportCanvas() {
     // 创建下载链接
     const link = document.createElement('a');
-    link.download = `ai-drawing-${Date.now()}.png`;
+    link.download = `drawing-${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
 }

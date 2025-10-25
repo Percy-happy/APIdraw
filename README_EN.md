@@ -1,4 +1,4 @@
-# AI Drawing Board
+# Drawing Board
 
 A versatile drawing board application that supports both manual drawing and API-controlled drawing functionality.
 
@@ -103,28 +103,28 @@ You can also control the drawing board programmatically through JavaScript:
 
 ```javascript
 // Draw a line
-window.AIDrawingAPI.drawLine(10, 10, 100, 100, '#FF0000', 5);
+window.DrawingAPI.drawLine(10, 10, 100, 100, '#FF0000', 5);
 
 // Draw a circle
-window.AIDrawingAPI.drawCircle(150, 150, 50, '#00FF00', 3);
+window.DrawingAPI.drawCircle(150, 150, 50, '#00FF00', 3);
 
 // Draw a rectangle
-window.AIDrawingAPI.drawRectangle(200, 200, 100, 80, '#0000FF', 2);
+window.DrawingAPI.drawRectangle(200, 200, 100, 80, '#0000FF', 2);
 
 // Draw text
-window.AIDrawingAPI.drawText(50, 50, 'Hello World', '#FF00FF', 24);
+window.DrawingAPI.drawText(50, 50, 'Hello World', '#FF00FF', 24);
 
 // Set color
-window.AIDrawingAPI.setColor('#000000');
+window.DrawingAPI.setColor('#000000');
 
 // Set line width
-window.AIDrawingAPI.setLineWidth(4);
+window.DrawingAPI.setLineWidth(4);
 
 // Clear canvas
-window.AIDrawingAPI.clear();
+window.DrawingAPI.clear();
 
 // Export canvas
-window.AIDrawingAPI.export();
+window.DrawingAPI.export();
 ```
 
 ## Technical Implementation
@@ -153,10 +153,10 @@ pip install pillow requests
 ### Basic Usage
 
 ```python
-from draw_api import AIDrawingAPI
+from draw_api import DrawingAPI
 
 # Create a local mode API instance
-api = AIDrawingAPI(width=800, height=600)
+api = DrawingAPI(width=800, height=600)
 
 # Draw shapes
 api.draw_line(10, 10, 100, 100, color='#ff0000', width=5)
@@ -175,7 +175,7 @@ api.show()
 
 ```python
 # Connect to web drawing board (requires web version running)
-api = AIDrawingAPI(mode='remote', url='http://localhost:8000')
+api = DrawingAPI(mode='remote', url='http://localhost:8000')
 
 # Draw shapes on remote board
 api.draw_circle(300, 300, 40)

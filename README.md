@@ -1,4 +1,4 @@
-# AI 画板应用 / AI Drawing Board
+# 画板应用 / Drawing Board
 
 这是一个功能丰富的在线画板应用，支持手动绘画和API调用绘画，以及导出图片功能。
 
@@ -56,37 +56,37 @@ In the API command input area, you can enter commands in the following format:
 After entering the command, click the "Execute" button or press Enter to run it.
 
 #### JavaScript API
-页面加载后，全局对象`window.AIDrawingAPI`可用于通过JavaScript控制画板：
+页面加载后，全局对象`window.DrawingAPI`可用于通过JavaScript控制画板：
 
-After page load, the global object `window.AIDrawingAPI` can be used to control the drawing board through JavaScript:
+After page load, the global object `window.DrawingAPI` can be used to control the drawing board through JavaScript:
 
 ```javascript
 // 绘制直线 / Draw a line
- AIDrawingAPI.drawLine(10, 10, 100, 100, "#ff0000", 5);
+ DrawingAPI.drawLine(10, 10, 100, 100, "#ff0000", 5);
 
 // 绘制圆形 / Draw a circle
- AIDrawingAPI.drawCircle(150, 150, 50, "#00ff00", 3);
+ DrawingAPI.drawCircle(150, 150, 50, "#00ff00", 3);
 
 // 绘制矩形 / Draw a rectangle
- AIDrawingAPI.drawRectangle(200, 200, 100, 80, "#0000ff", 2);
+ DrawingAPI.drawRectangle(200, 200, 100, 80, "#0000ff", 2);
 
 // 绘制文本 / Draw text
- AIDrawingAPI.drawText(50, 50, "Hello World", "#ff00ff", 24);
+ DrawingAPI.drawText(50, 50, "Hello World", "#ff00ff", 24);
 
 // 导出画布 / Export canvas
- const dataUrl = AIDrawingAPI.export();
+ const dataUrl = DrawingAPI.export();
 
 // 清空画布 / Clear canvas
- AIDrawingAPI.clear();
+ DrawingAPI.clear();
 
 // 设置画笔颜色 / Set brush color
- AIDrawingAPI.setColor("#ff9900");
+ DrawingAPI.setColor("#ff9900");
 
 // 设置画笔粗细 / Set line width
- AIDrawingAPI.setLineWidth(8);
+ DrawingAPI.setLineWidth(8);
 
 // 执行命令字符串 / Execute command string
- const result = AIDrawingAPI.executeCommand("draw(circle, 300, 300, 40)");
+ const result = DrawingAPI.executeCommand("draw(circle, 300, 300, 40)");
 ```
 
 ## 安装和运行 / Installation and Running
@@ -128,11 +128,11 @@ pip install pillow requests
 ### 基本使用 / Basic Usage
 
 ```python
-from draw_api import AIDrawingAPI
+from draw_api import DrawingAPI
 
 # 创建本地模式API实例 / Create a local mode API instance
-api = AIDrawingAPI(width=800, height=600)
-
+api = DrawingAPI(width=800, height=600)
+```
 # 绘制图形 / Draw shapes
 api.draw_line(10, 10, 100, 100, color='#ff0000', width=5)
 api.draw_circle(150, 150, 50, color='#00ff00', width=3)
@@ -150,7 +150,7 @@ api.show()
 
 ```python
 # 连接到Web版画板（需要Web版正在运行） / Connect to web drawing board
-api = AIDrawingAPI(mode='remote', url='http://localhost:8000')
+api = DrawingAPI(mode='remote', url='http://localhost:8000')
 
 # 绘制图形到远程画板 / Draw shapes on remote board
 api.draw_circle(300, 300, 40)

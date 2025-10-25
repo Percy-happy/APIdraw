@@ -1,4 +1,5 @@
-// API 功能模块
+// 画板 JavaScript API
+// 提供与Python API相同的功能接口
 const apiCommandInput = document.getElementById('apiCommand');
 const executeApiCommandBtn = document.getElementById('executeApiCommand');
 
@@ -185,14 +186,14 @@ function drawText(params) {
 function handleExportViaApi() {
     // 创建下载链接
     const link = document.createElement('a');
-    link.download = `ai-drawing-${Date.now()}.png`;
+    link.download = `drawing-${Date.now()}.png`;
     const canvasElement = document.getElementById('drawingCanvas');
     link.href = canvasElement.toDataURL('image/png');
     link.click();
 }
 
 // 公开的API方法，供外部调用
-window.AIDrawingAPI = {
+window.DrawingAPI = {
     // 绘制直线
     drawLine: function(x1, y1, x2, y2, color = null, width = null) {
         ctx.beginPath();

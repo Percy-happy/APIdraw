@@ -1,11 +1,11 @@
 # GitHub上传指南
 
-请按照以下步骤将AI画板项目上传到GitHub：
+请按照以下步骤将画板项目上传到GitHub：
 
 ## 1. 创建GitHub仓库（在GitHub网站上）
 1. 登录您的GitHub账号
 2. 点击右上角的"+"号，选择"New repository"
-3. 输入仓库名称"ai-drawing-board"
+3. 输入仓库名称"drawing-board"
 4. 添加描述（可选）
 5. 选择公开或私有
 6. 点击"Create repository"
@@ -22,10 +22,10 @@ git init
 git add .
 
 # 提交文件
-git commit -m "初始化AI画板项目"
+git commit -m "初始化画板项目"
 
 # 关联远程仓库（请替换YOUR_USERNAME为您的GitHub用户名）
-git remote add origin https://github.com/YOUR_USERNAME/ai-drawing-board.git
+git remote add origin https://github.com/YOUR_USERNAME/drawing-board.git
 
 # 推送代码到GitHub
 git push -u origin main

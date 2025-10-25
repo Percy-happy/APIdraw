@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-AI画板Python API示例
+画板Python API示例
 
 这个脚本演示了如何使用draw_api.py模块进行本地绘图。
 """
 
-from draw_api import AIDrawingAPI
+from draw_api import DrawingAPI
 
 def main():
     """主函数 - 演示API的各种功能"""
-    print("=== AI画板Python API 示例 ===")
+    print("=== 画板Python API 示例 ===")
     
     # 创建本地模式的API实例
     print("\n1. 创建画布...")
-    api = AIDrawingAPI(width=800, height=600)
+    api = DrawingAPI(width=800, height=600)
     print(f"画布创建成功: {api.width}x{api.height}")
     
     # 绘制基本图形
@@ -39,7 +39,7 @@ def main():
     
     # 绘制文本
     print("绘制文本...")
-    api.draw_text(100, 300, "Python AI 画板示例", color='#008000', font_size=24)
+    api.draw_text(100, 300, "Python 画板示例", color='#008000', font_size=24)
     
     # 使用命令字符串绘制
     print("\n3. 使用命令字符串绘制...")

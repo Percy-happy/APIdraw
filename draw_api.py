@@ -1,5 +1,5 @@
 """
-AI 画板 Python API
+画板 Python API
 
 这个模块提供了与Web版画板相同功能的Python接口。
 可以通过两种方式使用：
@@ -8,10 +8,10 @@ AI 画板 Python API
 
 使用示例：
     # 本地模式
-    from draw_api import AIDrawingAPI
+    from draw_api import DrawingAPI
     
     # 创建API实例
-    api = AIDrawingAPI(mode='local')
+    api = DrawingAPI(mode='local')
     
     # 绘制图形
     api.draw_line(10, 10, 100, 100, color='#ff0000', width=5)
@@ -23,7 +23,7 @@ AI 画板 Python API
     api.export('output.png')
     
     # 远程模式（需要Web版画板正在运行）
-    api = AIDrawingAPI(mode='remote', url='http://localhost:8000')
+    api = DrawingAPI(mode='remote', url='http://localhost:8000')
     api.draw_circle(300, 300, 40)
 """
 
@@ -34,16 +34,15 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 
 
-class AIDrawingAPI:
+class DrawingAPI:
     """
-    AI画板Python API类
+    画板Python API类
     提供绘制图形和导出功能
     """
     
-    def __init__(self, mode='local', url='http://localhost:8000', 
-                 width=800, height=600, background_color='#ffffff'):
+    def __init__(self, width=800, height=600, mode='local', url='http://localhost:8000', background_color='#ffffff'):
         """
-        初始化API实例
+        初始化画板API
         
         参数:
             mode: 运行模式，'local' 或 'remote'
@@ -318,16 +317,16 @@ class AIDrawingAPI:
 
 # 使用示例
 if __name__ == "__main__":
-    # 创建本地模式API实例
+    # 创建本地API实例
     print("创建本地画板...")
-    api = AIDrawingAPI(width=800, height=600)
+    api = DrawingAPI(width=800, height=600)
     
     # 绘制一些图形
     print("绘制示例图形...")
     api.draw_line(50, 50, 200, 50, color='#ff0000', width=3)
     api.draw_circle(150, 150, 80, color='#00ff00', width=2)
     api.draw_rectangle(300, 100, 150, 100, color='#0000ff', width=4)
-    api.draw_text(100, 300, "Python AI 画板", color='#ff00ff', font_size=24)
+    api.draw_text(100, 300, "Python 画板演示", color='#ff00ff', font_size=36)
     
     # 使用命令字符串
     api.execute_command("draw(line,400,400,600,400)")
