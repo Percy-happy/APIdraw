@@ -1,0 +1,40 @@
+# 依赖目录
+node_modules/
+__pycache__/
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器目录和文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 环境文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志文件
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# 测试覆盖率
+coverage/
+*.lcov
+.nyc_output
+
+# 构建输出
+dist/
+build/
+
+# 临时文件
+*.tmp
+*.temp

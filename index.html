@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 画板</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI 画板</h1>
+        
+        <div class="toolbar">
+            <div class="tool-group">
+                <label>画笔颜色:</label>
+                <input type="color" id="colorPicker" value="#000000">
+            </div>
+            <div class="tool-group">
+                <label>画笔粗细:</label>
+                <input type="range" id="lineWidth" min="1" max="50" value="5">
+                <span id="lineWidthValue">5px</span>
+            </div>
+            <button id="clearCanvas">清空画板</button>
+            <button id="exportCanvas">导出图片</button>
+        </div>
+        
+        <div class="api-section">
+            <h3>API 控制</h3>
+            <div class="api-controls">
+                <input type="text" id="apiCommand" placeholder="输入命令，如: draw(line,0,0,200,200) 或 draw(circle,100,100,50)">
+                <button id="executeApiCommand">执行命令</button>
+            </div>
+            <div class="api-docs">
+                <p>API 命令示例:</p>
+                <ul>
+                    <li><strong>直线:</strong> draw(line,x1,y1,x2,y2)</li>
+                    <li><strong>圆形:</strong> draw(circle,x,y,radius)</li>
+                    <li><strong>矩形:</strong> draw(rect,x,y,width,height)</li>
+                    <li><strong>文本:</strong> draw(text,x,y,"内容")</li>
+                </ul>
+            </div>
+        </div>
+        
+        <canvas id="drawingCanvas"></canvas>
+    </div>
+    
+    <script src="scripts.js"></script>
+    <script src="api.js"></script>
+</body>
+</html>
