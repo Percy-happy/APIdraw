@@ -132,7 +132,7 @@ from draw_api import DrawingAPI
 
 # 创建本地模式API实例 / Create a local mode API instance
 api = DrawingAPI(width=800, height=600)
-```
+
 # 绘制图形 / Draw shapes
 api.draw_line(10, 10, 100, 100, color='#ff0000', width=5)
 api.draw_circle(150, 150, 50, color='#00ff00', width=3)
