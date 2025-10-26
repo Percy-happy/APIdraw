@@ -9,31 +9,87 @@ body {
     background-color: #f5f5f5;
     color: #333;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h1 {
+/* API标题栏 */
+.api-header {
+    background-color: #3498db;
+    color: white;
     text-align: center;
-    margin-bottom: 30px;
-    color: #2c3e50;
-    font-size: 2.5em;
+    padding: 15px 0;
+    width: 100%;
 }
 
-h3 {
-    margin-bottom: 15px;
-    color: #34495e;
+.api-header h2 {
+    font-size: 24px;
+    margin: 0;
 }
 
+/* 主容器 */
+.main-container {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* 左侧工具栏 */
+.left-toolbar {
+    background-color: #2ecc71;
+    width: 80px;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.tool-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: white;
+    transition: all 0.3s ease;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.tool-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tool-btn.active {
+    background-color: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+}
+
+.tool-icon {
+    font-size: 24px;
+}
+
+.tool-name {
+    font-size: 14px;
+}
+
+/* 右侧内容区 */
+.content-area {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 顶部工具栏 */
 .toolbar {
     background-color: #fff;
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-wrap: wrap;
@@ -84,18 +140,43 @@ button:hover {
     background-color: #2980b9;
 }
 
+/* API控制区域 */
 .api-section {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
-    margin-bottom: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.api-section h3 {
+    margin-bottom: 15px;
+    color: #34495e;
 }
 
 .api-controls {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
+}
+
+/* 画布容器 */
+.canvas-container {
+    flex: 1;
+    background-color: #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+#drawingCanvas {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: crosshair;
 }
 
 input[type="text"] {

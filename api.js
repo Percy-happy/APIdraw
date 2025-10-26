@@ -130,6 +130,11 @@ function drawLine(params) {
     
     const [x1, y1, x2, y2] = params;
     
+    // 保存当前状态到历史记录
+    if (typeof saveToHistory === 'function') {
+        saveToHistory();
+    }
+    
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
@@ -137,6 +142,12 @@ function drawLine(params) {
     ctx.lineWidth = lineWidth.value;
     ctx.lineCap = 'round';
     ctx.stroke();
+    
+    // 更新历史记录的最后一项
+    if (typeof drawingHistory !== 'undefined' && drawingHistory.length > 0) {
+        const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        drawingHistory[drawingHistory.length - 1] = currentState;
+    }
 }
 
 // 绘制圆形
@@ -147,11 +158,22 @@ function drawCircle(params) {
     
     const [x, y, radius] = params;
     
+    // 保存当前状态到历史记录
+    if (typeof saveToHistory === 'function') {
+        saveToHistory();
+    }
+    
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
     ctx.strokeStyle = colorPicker.value;
     ctx.lineWidth = lineWidth.value;
     ctx.stroke();
+    
+    // 更新历史记录的最后一项
+    if (typeof drawingHistory !== 'undefined' && drawingHistory.length > 0) {
+        const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        drawingHistory[drawingHistory.length - 1] = currentState;
+    }
 }
 
 // 绘制矩形
@@ -162,11 +184,22 @@ function drawRectangle(params) {
     
     const [x, y, width, height] = params;
     
+    // 保存当前状态到历史记录
+    if (typeof saveToHistory === 'function') {
+        saveToHistory();
+    }
+    
     ctx.beginPath();
     ctx.rect(x, y, width, height);
     ctx.strokeStyle = colorPicker.value;
     ctx.lineWidth = lineWidth.value;
     ctx.stroke();
+    
+    // 更新历史记录的最后一项
+    if (typeof drawingHistory !== 'undefined' && drawingHistory.length > 0) {
+        const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        drawingHistory[drawingHistory.length - 1] = currentState;
+    }
 }
 
 // 绘制文本
@@ -177,9 +210,20 @@ function drawText(params) {
     
     const [x, y, text] = params;
     
+    // 保存当前状态到历史记录
+    if (typeof saveToHistory === 'function') {
+        saveToHistory();
+    }
+    
     ctx.font = '20px Arial';
     ctx.fillStyle = colorPicker.value;
     ctx.fillText(text, x, y);
+    
+    // 更新历史记录的最后一项
+    if (typeof drawingHistory !== 'undefined' && drawingHistory.length > 0) {
+        const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        drawingHistory[drawingHistory.length - 1] = currentState;
+    }
 }
 
 // 通过API导出画布
@@ -243,9 +287,21 @@ window.DrawingAPI = {
     
     // 清空画布
     clear: function() {
+        // 保存当前状态到历史记录
+        if (typeof saveToHistory === 'function') {
+            saveToHistory();
+        }
+        
         const canvasElement = document.getElementById('drawingCanvas');
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+        
+        // 更新历史记录的最后一项
+        if (typeof drawingHistory !== 'undefined' && drawingHistory.length > 0) {
+            const emptyState = ctx.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            drawingHistory[drawingHistory.length - 1] = emptyState;
+        }
+        
         return true;
     },
     
