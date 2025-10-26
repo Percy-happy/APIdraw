@@ -338,3 +338,88 @@ apiCommandInput.addEventListener('keypress', function(e) {
         executeApiCommand();
     }
 });
+
+// 为Python插件添加API支持
+(function setupPluginSupport() {
+    // 扩展DrawingAPI以支持远程命令执行
+    window.DrawingAPI.remoteExecute = function(command, color = null, width = null) {
+        try {
+            // 设置颜色和线宽（如果提供）
+            if (color) {
+                window.DrawingAPI.setColor(color);
+            }
+            if (width) {
+                window.DrawingAPI.setLineWidth(width);
+            }
+            
+            // 执行命令
+            const result = window.DrawingAPI.executeCommand(command);
+            return result;
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    };
+    
+    // 添加消息事件监听器，允许通过postMessage接收命令
+    window.addEventListener('message', function(event) {
+        // 验证消息来源（可选）
+        // if (event.origin !== 'http://localhost:11434') return;
+        
+        if (event.data && event.data.type === 'DRAW_API_EXECUTE') {
+            const { command, color, width } = event.data;
+            
+            // 执行远程命令
+            const result = window.DrawingAPI.remoteExecute(command, color, width);
+            
+            // 发送响应回来源窗口
+            if (event.source) {
+                event.source.postMessage({
+                    type: 'DRAW_API_RESPONSE',
+                    result: result
+                }, event.origin);
+            }
+        }
+    });
+    
+    // 添加Fetch API拦截器（仅用于演示）
+    if (typeof window !== 'undefined' && window.fetch) {
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options) {
+            // 检查是否是API执行请求
+            if (url.includes('/api/execute') && options && options.method === 'POST') {
+                try {
+                    let body = options.body;
+                    if (typeof body === 'string') {
+                        body = JSON.parse(body);
+                    }
+                    
+                    const { command, color, width } = body;
+                    
+                    // 执行远程命令
+                    const result = window.DrawingAPI.remoteExecute(command, color, width);
+                    
+                    // 返回模拟响应
+                    return Promise.resolve({
+                        ok: true,
+                        json: () => Promise.resolve(result)
+                    });
+                } catch (error) {
+                    return Promise.resolve({
+                        ok: false,
+                        json: () => Promise.resolve({ success: false, error: error.message })
+                    });
+                }
+            }
+            
+            // 其他请求保持原样
+            return originalFetch.apply(this, arguments);
+        };
+    }
+    
+    // 添加全局函数用于Python插件直接调用（如果在同一页面）
+    window.executeDrawCommand = function(command, color = null, width = null) {
+        return window.DrawingAPI.remoteExecute(command, color, width);
+    };
+    
+    console.log('画板API插件支持已初始化');
+})();

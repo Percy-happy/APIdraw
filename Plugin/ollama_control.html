@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama画板控制</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button#stopButton {
+            background-color: #f44336;
+        }
+        button#stopButton:hover {
+            background-color: #d32f2f;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .status.success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .status.error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .status.warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+        }
+        .status.info {
+            background-color: #d9edf7;
+            color: #31708f;
+        }
+        #chatLog {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .message.user {
+            background-color: #e3f2fd;
+            text-align: right;
+        }
+        .message.ollama {
+            background-color: #f1f8e9;
+            text-align: left;
+        }
+        .message.system {
+            background-color: #f5f5f5;
+            font-style: italic;
+        }
+        .command {
+            font-family: monospace;
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .note {
+            background-color: #fff9c4;
+            padding: 10px;
+            border-left: 4px solid #ffeb3b;
+            margin-bottom: 15px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ollama画板控制</h1>
+    <div class="note">
+        <strong>注意：</strong>
+        此界面需要您手动启动Python插件。请在终端中运行：
+        <code>python ollama_draw_plugin.py</code>
+    </div>
+    
+    <div class="container">
+        <h2>连接设置</h2>
+        <div class="status info" id="connectionStatus">
+            请检查Ollama和画板服务是否正在运行
+        </div>
+        
+        <label for="ollamaUrl">Ollama服务地址：</label>
+        <input type="text" id="ollamaUrl" value="http://localhost:11434" placeholder="Ollama服务地址">
+        
+        <label for="model">Ollama模型：</label>
+        <input type="text" id="model" value="llama3" placeholder="使用的Ollama模型">
+        
+        <label for="canvasUrl">画板地址：</label>
+        <input type="text" id="canvasUrl" value="http://localhost:8000" placeholder="画板Web服务地址">
+        
+        <button id="checkConnectionButton">检查连接</button>
+    </div>
+    
+    <div class="container">
+        <h2>对话控制</h2>
+        <div id="chatLog"></div>
+        
+        <div class="message system" id="initialMessage">
+            请输入自然语言指令控制画板（例如："在画布中间画一个红色圆形"）
+        </div>
+        
+        <div class="message system" id="commandsGuide">
+            可用命令示例：
+            <ul>
+                <li>绘制基本图形："在画布中间画一个黑色圆形"、"从左上角到右下角画一条红色直线"</li>
+                <li>设置样式："使用绿色绘制"、"将线宽设置为5"</li>
+                <li>文本操作："在画布底部写'Hello World'"</li>
+                <li>其他操作："清空画布"、"画一个蓝色正方形"</li>
+            </ul>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="userInput" style="flex: 1;" placeholder="输入绘图指令...">
+            <button id="sendButton">发送</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>直接命令执行</h2>
+        <p>您也可以直接输入API命令（仅当Python插件正在运行时有效）：</p>
+        
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="directCommand" style="flex: 1;" placeholder="例如: draw(circle,400,300,50)">
+            <button id="executeDirectButton">执行</button>
+        </div>
+    </div>
+    
+    <script>
+        // DOM 元素
+        const connectionStatus = document.getElementById('connectionStatus');
+        const ollamaUrl = document.getElementById('ollamaUrl');
+        const model = document.getElementById('model');
+        const canvasUrl = document.getElementById('canvasUrl');
+        const checkConnectionButton = document.getElementById('checkConnectionButton');
+        const chatLog = document.getElementById('chatLog');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+        const directCommand = document.getElementById('directCommand');
+        const executeDirectButton = document.getElementById('executeDirectButton');
+        
+        // 保存连接状态
+        let connectionInfo = {
+            ollamaUrl: ollamaUrl.value,
+            model: model.value,
+            canvasUrl: canvasUrl.value
+        };
+        
+        // 检查连接
+        async function checkConnection() {
+            connectionStatus.className = 'status info';
+            connectionStatus.textContent = '正在检查连接...';
+            
+            // 检查Ollama连接
+            try {
+                const ollamaResponse = await fetch(`${ollamaUrl.value}/api/tags`);
+                if (ollamaResponse.ok) {
+                    // 检查画板连接
+                    try {
+                        // 尝试访问画板页面
+                        const canvasResponse = await fetch(canvasUrl.value);
+                        if (canvasResponse.ok) {
+                            connectionStatus.className = 'status success';
+                            connectionStatus.textContent = '连接成功！Ollama和画板服务均可用。';
+                            
+                            // 更新连接信息
+                            connectionInfo = {
+                                ollamaUrl: ollamaUrl.value,
+                                model: model.value,
+                                canvasUrl: canvasUrl.value
+                            };
+                            
+                            return true;
+                        } else {
+                            throw new Error('无法访问画板服务');
+                        }
+                    } catch (error) {
+                        connectionStatus.className = 'status error';
+                        connectionStatus.textContent = `Ollama连接成功，但无法连接到画板服务: ${error.message}`;
+                        return false;
+                    }
+                } else {
+                    throw new Error('Ollama服务不可用');
+                }
+            } catch (error) {
+                connectionStatus.className = 'status error';
+                connectionStatus.textContent = `连接失败: ${error.message}。请确保Ollama服务正在运行。`;
+                return false;
+            }
+        }
+        
+        // 添加消息到聊天记录
+        function addMessage(type, content) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+            
+            // 格式化代码块
+            if (type === 'ollama') {
+                // 尝试提取命令
+                const commandMatch = content.match(/(draw\([^)]+\)|setColor\([^)]+\)|setLineWidth\([^)]+\)|clear\(\))/);
+                if (commandMatch) {
+                    const command = commandMatch[0];
+                    const parts = content.split(command);
+                    messageElement.innerHTML = `${parts[0]}<span class="command">${command}</span>${parts[1]}`;
+                } else {
+                    messageElement.textContent = content;
+                }
+            } else {
+                messageElement.textContent = content;
+            }
+            
+            chatLog.appendChild(messageElement);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+        
+        // 发送用户消息到Ollama（通过Python插件）
+        async function sendMessageToOllama() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // 添加用户消息到聊天记录
+            addMessage('user', message);
+            userInput.value = '';
+            
+            // 显示思考中状态
+            const thinkingElement = document.createElement('div');
+            thinkingElement.className = 'message system';
+            thinkingElement.textContent = '思考中...';
+            chatLog.appendChild(thinkingElement);
+            chatLog.scrollTop = chatLog.scrollHeight;
+            
+            try {
+                // 注意：这里我们模拟与Python插件的通信
+                // 实际实现需要Python插件运行一个WebSocket或HTTP服务器
+                // 这里仅作为界面演示
+                
+                // 模拟响应延迟
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // 移除思考状态
+                chatLog.removeChild(thinkingElement);
+                
+                // 模拟Ollama响应
+                // 注意：在实际使用中，这应该是来自Python插件的响应
+                let mockResponse = "命令已发送到Python插件，正在执行...";
+                
+                // 根据输入内容生成一些模拟命令
+                if (message.includes('圆形') || message.includes('圆')) {
+                    mockResponse = `生成命令: draw(circle,400,300,50)`;
+                } else if (message.includes('直线')) {
+                    mockResponse = `生成命令: draw(line,100,100,500,100)`;
+                } else if (message.includes('矩形') || message.includes('正方形')) {
+                    mockResponse = `生成命令: draw(rect,200,200,200,150)`;
+                } else if (message.includes('清空') || message.includes('清除')) {
+                    mockResponse = `生成命令: clear()`;
+                } else if (message.includes('颜色') || message.includes('红色') || message.includes('绿色') || message.includes('蓝色')) {
+                    mockResponse = `生成命令: setColor('#00ff00')`;
+                } else if (message.includes('写') || message.includes('文本') || message.includes('字')) {
+                    mockResponse = `生成命令: draw(text,300,300,"Hello World")`;
+                }
+                
+                addMessage('ollama', mockResponse);
+                addMessage('system', '命令执行成功！');
+            } catch (error) {
+                chatLog.removeChild(thinkingElement);
+                addMessage('system', `错误: ${error.message}`);
+            }
+        }
+        
+        // 直接执行API命令
+        async function executeDirectCommand() {
+            const command = directCommand.value.trim();
+            if (!command) return;
+            
+            // 检查是否在浏览器环境中可以直接调用
+            if (window.executeDrawCommand) {
+                try {
+                    const result = window.executeDrawCommand(command);
+                    if (result.success) {
+                        addMessage('system', `直接命令执行成功: ${command}`);
+                    } else {
+                        addMessage('system', `直接命令执行失败: ${result.error}`);
+                    }
+                } catch (error) {
+                    addMessage('system', `直接命令执行错误: ${error.message}`);
+                }
+            } else {
+                // 尝试通过Python插件执行
+                addMessage('system', `尝试通过Python插件执行命令: ${command}`);
+                addMessage('system', '注意：此功能需要Python插件正在运行');
+            }
+            
+            directCommand.value = '';
+        }
+        
+        // 事件监听
+        checkConnectionButton.addEventListener('click', checkConnection);
+        
+        sendButton.addEventListener('click', sendMessageToOllama);
+        
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessageToOllama();
+            }
+        });
+        
+        executeDirectButton.addEventListener('click', executeDirectCommand);
+        
+        directCommand.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                executeDirectCommand();
+            }
+        });
+        
+        // 页面加载时自动隐藏初始提示
+        window.addEventListener('load', function() {
+            document.getElementById('initialMessage').style.display = 'none';
+            document.getElementById('commandsGuide').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
