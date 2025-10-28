@@ -260,10 +260,16 @@ class DrawingAPI:
                 elif command.startswith('draw(text,'):
                     # 解析文本命令（注意处理引号）
                     import re
-                    match = re.search(r'draw\(text,(\d+),(\d+),"(.+)"\)', command)
+                    # 修改正则表达式，支持浮点数坐标
+                    match = re.search(r'draw\(text,([\d.]+),([\d.]+),"(.+)"\)', command)
                     if match:
-                        x, y, text = float(match.group(1)), float(match.group(2)), match.group(3)
-                        return self.draw_text(x, y, text)
+                        try:
+                            x = float(match.group(1))
+                            y = float(match.group(2))
+                            text = match.group(3)
+                            return self.draw_text(x, y, text)
+                        except ValueError:
+                            return {"success": False, "error": "文本坐标必须是有效数字"}
                 elif command == 'clear()':
                     return self.clear()
                 return {"success": False, "error": "不支持的命令"}
